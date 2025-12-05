@@ -240,18 +240,21 @@ cp "$APP_DIR/antigravity-manager.desktop" "$APP_DIR/usr/share/applications/antig
 
 success "Desktop entry created"
 
-# Copy icon (convert from ico to png if needed)
+# Copy and convert logo to icon (convert from jpg to png)
 if command -v convert &> /dev/null; then
-    echo "🎨 Converting icon..."
-    if convert "assets/icon.ico[0]" -resize 256x256 "$APP_DIR/usr/share/icons/hicolor/256x256/apps/antigravity-manager.png" 2>/dev/null; then
-        success "Icon converted to PNG"
+    echo "🎨 Converting logo to icon..."
+    # Convert logo.jpg to PNG with proper size for AppImage
+    if convert "assets/logo.png" -resize 256x256 "$APP_DIR/usr/share/icons/hicolor/256x256/apps/antigravity-manager.png" 2>/dev/null; then
+        success "Logo converted to PNG icon"
+        # Also create a copy in AppDir root for AppImage
+        cp "$APP_DIR/usr/share/icons/hicolor/256x256/apps/antigravity-manager.png" "$APP_DIR/antigravity-manager.png"
     else
-        warn "Icon conversion failed, using .ico directly"
-        cp "assets/icon.ico" "$APP_DIR/antigravity-manager.png"
+        warn "Logo conversion failed, using logo.jpg directly"
+        cp "assets/logo.png" "$APP_DIR/antigravity-manager.png"
     fi
 else
-    warn "ImageMagick not found, using .ico directly"
-    cp "assets/icon.ico" "$APP_DIR/antigravity-manager.png"
+    warn "ImageMagick not found, using logo.jpg directly"
+    cp "assets/logo.png" "$APP_DIR/antigravity-manager.png"
 fi
 
 # Create AppRun script
