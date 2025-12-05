@@ -77,30 +77,34 @@ def get_accounts_file_path():
     return get_app_data_dir() / "antigravity_accounts.json"
 
 def get_antigravity_db_paths():
-    """获取 Antigravity 数据库可能的路径"""
+    """Lấy các đường dẫn có thể của cơ sở dữ liệu Antigravity"""
     system = platform.system()
     paths = []
     home = Path.home()
 
     if system == "Darwin":  # macOS
-        # 标准路径: ~/Library/Application Support/Antigravity/User/globalStorage/state.vscdb
+        # Đường dẫn tiêu chuẩn: ~/Library/Application Support/Antigravity/User/globalStorage/state.vscdb
         paths.append(home / "Library/Application Support/Antigravity/User/globalStorage/state.vscdb")
-        # 备用路径 (旧版本可能的位置)
+        # Đường dẫn dự phòng (vị trí có thể dùng cho phiên bản cũ)
         paths.append(home / "Library/Application Support/Antigravity/state.vscdb")
     elif system == "Windows":
-        # 标准路径: %APPDATA%/Antigravity/state.vscdb
+        # Đường dẫn tiêu chuẩn: %APPDATA%/Antigravity/state.vscdb
         appdata = os.environ.get("APPDATA")
         if appdata:
             base_path = Path(appdata) / "Antigravity"
-            # 参考 cursor_reset.py 的路径结构
+            # Tham khảo cấu trúc đường dẫn của cursor_reset.py
             paths.append(base_path / "User/globalStorage/state.vscdb")
             paths.append(base_path / "User/state.vscdb")
             paths.append(base_path / "state.vscdb")
     elif system == "Linux":
-        # 标准路径: ~/.config/Antigravity/state.vscdb
+        # Đường dẫn tiêu chuẩn cho Linux (bao gồm Linux Mint)
+        # Ưu tiên: ~/.config/Antigravity/User/globalStorage/state.vscdb
+        paths.append(home / ".config/Antigravity/User/globalStorage/state.vscdb")
+        # Đường dẫn dự phòng
         paths.append(home / ".config/Antigravity/state.vscdb")
     
     return paths
+
 
 def get_antigravity_executable_path():
     """获取 Antigravity 可执行文件路径"""
@@ -128,9 +132,37 @@ def get_antigravity_executable_path():
         return local_app_data / "Programs/Antigravity/Antigravity.exe"
         
     elif system == "Linux":
-        return Path("/usr/share/antigravity/antigravity")
-    
-    return None
+        import subprocess
+        
+        # Thử tìm bằng which trước (cách đáng tin cậy nhất)
+        try:
+            result = subprocess.run(
+                ["which", "antigravity"], 
+                capture_output=True, 
+                text=True, 
+                timeout=2
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                path = Path(result.stdout.strip())
+                if path.exists():
+                    return path
+        except Exception:
+            pass
+        
+        # Fallback: các đường dẫn có thể trên Linux
+        home = Path.home()
+        possible_paths = [
+            Path("/usr/bin/antigravity"),           # Cài từ apt repository
+            Path("/opt/antigravity/antigravity"),   # Cài thủ công vào /opt
+            home / ".local/bin/antigravity",        # Cài user-local
+        ]
+        
+        for path in possible_paths:
+            if path.exists():
+                return path
+        
+        # Không tìm thấy
+        return None
 
 def open_uri(uri):
     """跨平台打开 URI 协议

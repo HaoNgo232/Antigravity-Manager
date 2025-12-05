@@ -49,7 +49,7 @@ class SettingsView(ft.Container):
     def build_ui(self):
         self.content = ft.Column(
             [
-                ft.Text("设置", size=28, weight=ft.FontWeight.BOLD, color=self.palette.text_main),
+                ft.Text("Settings", size=28, weight=ft.FontWeight.BOLD, color=self.palette.text_main),
                 ft.Container(height=20),
                 
                 # Top Row: Data Management + About (side by side)
@@ -59,7 +59,7 @@ class SettingsView(ft.Container):
                         ft.Container(
                             content=ft.Column(
                                 [
-                                    ft.Text("数据管理", size=13, weight=ft.FontWeight.BOLD, color=self.palette.text_grey),
+                                    ft.Text("Data Management", size=13, weight=ft.FontWeight.BOLD, color=self.palette.text_grey),
                                     ft.Container(height=10),
                                     ft.Container(
                                         content=ft.Column(
@@ -74,8 +74,8 @@ class SettingsView(ft.Container):
                                                         ),
                                                         ft.Column(
                                                             [
-                                                                ft.Text("本地数据目录", size=15, weight=ft.FontWeight.W_600, color=self.palette.text_main),
-                                                                ft.Text("查看备份文件和数据库", size=12, color=self.palette.text_grey),
+                                                                ft.Text("Local Data Directory", size=15, weight=ft.FontWeight.W_600, color=self.palette.text_main),
+                                                                ft.Text("View backup files and database", size=12, color=self.palette.text_grey),
                                                             ],
                                                             spacing=2,
                                                             alignment=ft.MainAxisAlignment.CENTER
@@ -85,7 +85,7 @@ class SettingsView(ft.Container):
                                                 ),
                                                 ft.Container(height=20),
                                                 ft.Container(
-                                                    content=ft.Text("打开文件夹", size=13, color=self.palette.primary, weight=ft.FontWeight.BOLD),
+                                                    content=ft.Text("Open Folder", size=13, color=self.palette.primary, weight=ft.FontWeight.BOLD),
                                                     padding=ft.padding.symmetric(horizontal=20, vertical=10),
                                                     border_radius=8,
                                                     bgcolor=self.palette.bg_light_blue,
@@ -117,7 +117,7 @@ class SettingsView(ft.Container):
                         ft.Container(
                             content=ft.Column(
                                 [
-                                    ft.Text("关于", size=13, weight=ft.FontWeight.BOLD, color=self.palette.text_grey),
+                                    ft.Text("About", size=13, weight=ft.FontWeight.BOLD, color=self.palette.text_grey),
                                     ft.Container(height=10),
                                     ft.Container(
                                         content=ft.Column(
@@ -132,7 +132,7 @@ class SettingsView(ft.Container):
                                                 ft.Container(height=15),
                                                 ft.Row(
                                                     [
-                                                        ft.Text("作者：", size=13, color=self.palette.text_grey, weight=ft.FontWeight.W_500),
+                                                        ft.Text("Author:", size=13, color=self.palette.text_grey, weight=ft.FontWeight.W_500),
                                                         ft.Text("Ctrler", size=13, color=self.palette.text_main),
                                                     ],
                                                     spacing=5
@@ -140,7 +140,7 @@ class SettingsView(ft.Container):
                                                 ft.Container(height=8),
                                                 ft.Row(
                                                     [
-                                                        ft.Text("公众号：", size=13, color=self.palette.text_grey, weight=ft.FontWeight.W_500),
+                                                        ft.Text("WeChat:", size=13, color=self.palette.text_grey, weight=ft.FontWeight.W_500),
                                                         ft.Text("Ctrler", size=13, color=self.palette.text_main),
                                                     ],
                                                     spacing=5
@@ -172,7 +172,7 @@ class SettingsView(ft.Container):
                 ft.Container(height=20),
                 
                 # Logs Section (takes up remaining space)
-                ft.Text("系统日志", size=13, weight=ft.FontWeight.BOLD, color=self.palette.text_grey),
+                ft.Text("System Logs", size=13, weight=ft.FontWeight.BOLD, color=self.palette.text_grey),
                 ft.Container(height=10),
                 ft.Container(
                     content=self.log_view,

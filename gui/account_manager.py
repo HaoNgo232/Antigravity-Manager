@@ -39,13 +39,13 @@ def add_account_snapshot(name=None, email=None):
     """添加当前状态为新账号，如果邮箱已存在则覆盖"""
     # 0. 自动获取信息
     if not email:
-        info("正在尝试从数据库读取账号信息...")
+        info("Trying to read account info from database...")
         account_info = get_current_account_info()
         if account_info and "email" in account_info:
             email = account_info["email"]
-            info(f"自动获取到邮箱: {email}")
+            info(f"Auto-retrieved email: {email}")
         else:
-            warning("无法从数据库自动获取邮箱，将使用 'Unknown'")
+            warning("Cannot auto-retrieve email from database, will use 'Unknown'")
             email = "Unknown"
             
     if not name:
@@ -54,7 +54,7 @@ def add_account_snapshot(name=None, email=None):
             name = email.split("@")[0]
         else:
             name = f"Account_{int(time.time())}"
-        info(f"使用自动生成的名称: {name}")
+        info(f"Using auto-generated name: {name}")
 
     # 1. 检查是否已存在相同邮箱的账号
     accounts = load_accounts()
@@ -68,7 +68,7 @@ def add_account_snapshot(name=None, email=None):
             break
     
     if existing_account:
-        info(f"检测到邮箱 {email} 已存在备份，将覆盖旧备份")
+        info(f"Detected email {email} already has backup, will overwrite old backup")
         # 使用已有的 ID 和备份路径
         account_id = existing_id
         backup_path = Path(existing_account["backup_file"])
@@ -78,7 +78,7 @@ def add_account_snapshot(name=None, email=None):
         if not name or name == email.split("@")[0]:
             name = existing_account.get("name", name)
     else:
-        info(f"创建新账号备份: {email}")
+        info(f"Creating new account backup: {email}")
         # 生成新的 ID 和备份路径
         account_id = str(uuid.uuid4())
         backup_filename = f"{account_id}.json"
@@ -88,9 +88,9 @@ def add_account_snapshot(name=None, email=None):
         created_at = datetime.now().isoformat()
     
     # 2. 执行备份
-    info(f"正在备份当前状态为账号: {name}")
+    info(f"Backing up current state as account: {name}")
     if not backup_account(email, str(backup_path)):
-        error("备份失败，取消添加账号")
+        error("Backup failed, canceling account addition")
         return False
     
     # 3. 更新账号列表
@@ -105,9 +105,9 @@ def add_account_snapshot(name=None, email=None):
     
     if save_accounts(accounts):
         if existing_account:
-            info(f"账号 {name} ({email}) 备份已更新")
+            info(f"Account {name} ({email}) backup updated")
         else:
-            info(f"账号 {name} ({email}) 添加成功")
+            info(f"Account {name} ({email}) added successfully")
         return True
     return False
 
@@ -115,7 +115,7 @@ def delete_account(account_id):
     """删除账号"""
     accounts = load_accounts()
     if account_id not in accounts:
-        error("账号不存在")
+        error("Account does not exist")
         return False
     
     account = accounts[account_id]
@@ -126,14 +126,14 @@ def delete_account(account_id):
     if backup_file and os.path.exists(backup_file):
         try:
             os.remove(backup_file)
-            info(f"备份文件已删除: {backup_file}")
+            info(f"Backup file deleted: {backup_file}")
         except Exception as e:
-            warning(f"删除备份文件失败: {e}")
+            warning(f"Failed to delete backup file: {e}")
     
     # 从列表中移除
     del accounts[account_id]
     if save_accounts(accounts):
-        info(f"账号 {name} 已删除")
+        info(f"Account {name} 已删除")
         return True
     return False
 
@@ -141,7 +141,7 @@ def switch_account(account_id):
     """切换到指定账号"""
     accounts = load_accounts()
     if account_id not in accounts:
-        error("账号不存在")
+        error("Account does not exist")
         return False
     
     account = accounts[account_id]
@@ -149,15 +149,15 @@ def switch_account(account_id):
     backup_file = account.get("backup_file")
     
     if not backup_file or not os.path.exists(backup_file):
-        error(f"备份文件丢失: {backup_file}")
+        error(f"Backup file missing: {backup_file}")
         return False
     
-    info(f"准备切换到账号: {name}")
+    info(f"Preparing to switch to account: {name}")
     
     # 1. 关闭进程
     if not close_antigravity():
         # 尝试继续，但给出警告
-        warning("无法关闭 Antigravity，尝试强制恢复...")
+        warning("Cannot close Antigravity, attempting forced recovery...")
     
     # 2. 恢复数据
     if restore_account(backup_file):
@@ -167,10 +167,10 @@ def switch_account(account_id):
         
         # 3. 启动进程
         start_antigravity()
-        info(f"切换到账号 {name} 成功")
+        info(f"Switched to account {name} 成功")
         return True
     else:
-        error("恢复数据失败")
+        error("Failed to restore data")
         return False
 
 def list_accounts_data():

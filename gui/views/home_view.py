@@ -27,7 +27,7 @@ class HomeView(ft.Container):
             content=ft.Row(
                 [
                     ft.Icon(AppIcons.info, size=16, color=self.palette.primary),
-                    ft.Text("正在检测状态...", size=13, weight=ft.FontWeight.W_500, color=self.palette.primary)
+                    ft.Text("Detecting status...", size=13, weight=ft.FontWeight.W_500, color=self.palette.primary)
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
                 vertical_alignment=ft.CrossAxisAlignment.CENTER
@@ -40,7 +40,7 @@ class HomeView(ft.Container):
         )
         
         # List Header Elements
-        self.list_title = ft.Text("账号列表", size=18, weight=ft.FontWeight.BOLD, color=self.palette.text_main)
+        self.list_title = ft.Text("Account List", size=18, weight=ft.FontWeight.BOLD, color=self.palette.text_main)
         self.stats_badge = ft.Container(
             content=ft.Text("0", size=12, color=self.palette.primary, weight=ft.FontWeight.BOLD),
             bgcolor=self.palette.bg_light_blue,
@@ -62,12 +62,12 @@ class HomeView(ft.Container):
         self.monitor_thread = threading.Thread(target=self.monitor_status, daemon=True)
         self.monitor_thread.start()
         
-        # 自动备份当前账号
+        # Auto-backup current account
         self.auto_backup()
 
     def auto_backup(self):
         def task():
-            # 延迟一点时间，确保UI已加载
+            # Delay a bit to ensure UI is loaded
             time.sleep(1)
             if add_account_snapshot():
                 self.refresh_data()
@@ -112,7 +112,7 @@ class HomeView(ft.Container):
                             content=ft.Row(
                                 [
                                     ft.Icon(AppIcons.add, size=14, color="#FFFFFF"), # Always white on primary
-                                    ft.Text("备份当前", size=13, color="#FFFFFF", weight=ft.FontWeight.W_600)
+                                    ft.Text("Backup Current", size=13, color="#FFFFFF", weight=ft.FontWeight.W_600)
                                 ],
                                 spacing=4,
                                 alignment=ft.MainAxisAlignment.CENTER
@@ -154,7 +154,7 @@ class HomeView(ft.Container):
         accounts = list_accounts_data()
         
         # Update stats badge
-        self.stats_badge.content.value = f"{len(accounts)} 个备份"
+        self.stats_badge.content.value = f"{len(accounts)} backup(s)"
         
         if not accounts:
             self.accounts_list.controls.append(
@@ -163,7 +163,7 @@ class HomeView(ft.Container):
                         [
                             ft.Icon(AppIcons.document, size=40, color=self.palette.text_grey),
                             ft.Container(height=10),
-                            ft.Text("暂无备份记录", color=self.palette.text_grey, size=14),
+                            ft.Text("No backup records", color=self.palette.text_grey, size=14),
                         ],
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER
                     ),
@@ -181,7 +181,7 @@ class HomeView(ft.Container):
 
     def format_last_used(self, iso_str):
         if not iso_str:
-            return "从未"
+            return "Never"
         try:
             dt = datetime.fromisoformat(iso_str)
             return dt.strftime("%Y-%m-%d %H:%M")
@@ -220,7 +220,7 @@ class HomeView(ft.Container):
                                         [
                                             ft.Text(acc['name'], size=15, weight=ft.FontWeight.BOLD, color=self.palette.text_main),
                                             ft.Container(
-                                                content=ft.Text("当前", size=10, color=self.palette.primary, weight=ft.FontWeight.BOLD),
+                                                content=ft.Text("Current", size=10, color=self.palette.primary, weight=ft.FontWeight.BOLD),
                                                 bgcolor=self.palette.bg_light_blue,
                                                 padding=ft.padding.symmetric(horizontal=6, vertical=2),
                                                 border_radius=4,
@@ -245,7 +245,7 @@ class HomeView(ft.Container):
                             ft.Column(
                                 [
                                     ft.Text(
-                                        "上次使用", 
+                                        "Last used", 
                                         size=10, 
                                         color=self.palette.text_grey,
                                         text_align=ft.TextAlign.RIGHT
@@ -266,12 +266,12 @@ class HomeView(ft.Container):
                                 icon_color=self.palette.text_grey,
                                 items=[
                                     ft.PopupMenuItem(
-                                        text="切换到此账号", 
+                                        text="Switch to this account", 
                                         icon=ft.Icons.SWAP_HORIZ,
                                         on_click=lambda e: self.switch_to_account(acc['id'])
                                     ),
                                     ft.PopupMenuItem(
-                                        text="删除备份", 
+                                        text="Delete backup", 
                                         icon=ft.Icons.DELETE_OUTLINE,
                                         on_click=lambda e: self.delete_acc(acc['id'])
                                     ),
@@ -318,13 +318,13 @@ class HomeView(ft.Container):
                 self.status_bar.bgcolor = self.palette.bg_light_green
                 icon.name = AppIcons.check_circle
                 icon.color = "#34C759"
-                text.value = "Antigravity 正在后台运行中"
+                text.value = "Antigravity is running in the background"
                 text.color = "#34C759"
             else:
                 self.status_bar.bgcolor = self.palette.bg_light_red
                 icon.name = AppIcons.pause_circle
                 icon.color = "#FF3B30"
-                text.value = "Antigravity 服务已停止 (点击启动)"
+                text.value = "Antigravity service stopped (click to start)"
                 text.color = "#FF3B30"
             
             self.update()
@@ -338,11 +338,11 @@ class HomeView(ft.Container):
 
     def show_message(self, message, is_error=False):
         dlg = ft.CupertinoAlertDialog(
-            title=ft.Text("提示"),
+            title=ft.Text("Notice"),
             content=ft.Text(message),
             actions=[
                 ft.CupertinoDialogAction(
-                    "确定", 
+                    "OK", 
                     is_destructive_action=is_error,
                     on_click=lambda e: self.page.close(dlg)
                 )
@@ -354,7 +354,7 @@ class HomeView(ft.Container):
         if start_antigravity():
             pass
         else:
-            self.show_message("启动失败", True)
+            self.show_message("Failed to start", True)
 
     def stop_app(self, e):
         def close_task():
@@ -373,13 +373,13 @@ class HomeView(ft.Container):
                     pass
             except Exception as e:
                 import traceback
-                error_msg = f"备份异常: {str(e)}\n{traceback.format_exc()}"
+                error_msg = f"Backup exception: {str(e)}\n{traceback.format_exc()}"
                 from utils import error
                 error(error_msg)
-                self.show_message(f"备份错误: {str(e)}", True)
+                self.show_message(f"Backup error: {str(e)}", True)
         threading.Thread(target=backup_task, daemon=True).start()
 
-    def show_confirm_dialog(self, title, content, on_confirm, confirm_text="确定", is_destructive=False):
+    def show_confirm_dialog(self, title, content, on_confirm, confirm_text="OK", is_destructive=False):
         def handle_confirm(e):
             on_confirm()
             self.page.close(dlg)
@@ -389,7 +389,7 @@ class HomeView(ft.Container):
             content=ft.Text(content),
             actions=[
                 ft.CupertinoDialogAction(
-                    "取消", 
+                    "Cancel", 
                     on_click=lambda e: self.page.close(dlg)
                 ),
                 ft.CupertinoDialogAction(
@@ -407,15 +407,15 @@ class HomeView(ft.Container):
                 if switch_account(account_id):
                     self.refresh_data()
                     # Optional: show success message
-                    # self.show_message("切换账号成功")
+                    # self.show_message("Account switched successfully")
                 else:
-                    self.show_message("切换账号失败，请检查日志", True)
+                    self.show_message("Failed to switch account, please check logs", True)
             except Exception as e:
                 import traceback
-                error_msg = f"切换账号异常: {str(e)}\n{traceback.format_exc()}"
+                error_msg = f"Account switch exception: {str(e)}\n{traceback.format_exc()}"
                 from utils import error
                 error(error_msg)
-                self.show_message(f"发生错误: {str(e)}", True)
+                self.show_message(f"Error occurred: {str(e)}", True)
         threading.Thread(target=task, daemon=True).start()
 
     def delete_acc(self, account_id):
@@ -424,19 +424,20 @@ class HomeView(ft.Container):
                 if delete_account(account_id):
                     self.refresh_data()
                 else:
-                    self.show_message("删除账号失败，请检查日志", True)
+                    self.show_message("Failed to delete account, please check logs", True)
             except Exception as e:
                 import traceback
-                error_msg = f"删除异常: {str(e)}\n{traceback.format_exc()}"
+                error_msg = f"Deletion exception: {str(e)}\n{traceback.format_exc()}"
                 from utils import error
                 error(error_msg)
-                self.show_message(f"删除错误: {str(e)}", True)
+                self.show_message(f"Deletion error: {str(e)}", True)
             self.page.update()
 
         self.show_confirm_dialog(
-            title="确认删除",
-            content="确定要删除这个账号备份吗？此操作无法撤销。",
+            title="Confirm Deletion",
+            content="Are you sure you want to delete this account backup? This action cannot be undone.",
             on_confirm=confirm_delete,
-            confirm_text="删除",
+            confirm_text="Delete",
             is_destructive=True
         )
+
