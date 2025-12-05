@@ -123,3 +123,7 @@ cython_debug/
 *.app
 *.zip
 *.pkg
+appimagetool-x86_64.AppImage
+Antigravity-Manager-x86_64.AppImage
+gui/Antigravity Manager.spec
+gui/Antigravity Manager.spec

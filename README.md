@@ -21,7 +21,7 @@ Antigravity Manager is a powerful utility designed to solve the pain point of An
 *   **Process Monitoring**:
     *   **Graceful Exit**: Prioritizes using AppleScript (macOS) or taskkill (Windows) to notify the app to exit normally, protecting data integrity.
     *   **Force Fallback**: If the app freezes, automatically escalates to force termination strategy to ensure successful switching.
-*   **Cross-Platform Support**: Perfect compatibility with macOS (Intel/Apple Silicon) and Windows 10/11.
+*   **Cross-Platform Support**: Perfect compatibility with macOS (Intel/Apple Silicon), Windows 10/11, and Linux (Ubuntu, Mint, Debian).
 
 ### 🎨 Modern Interface
 *   **Flet-Powered**: High-performance GUI based on Flutter, responsive and fast.
@@ -33,7 +33,7 @@ Antigravity Manager is a powerful utility designed to solve the pain point of An
 ## 🛠️ Quick Start
 
 ### Requirements
-*   **Operating System**: macOS 10.15+ or Windows 10+
+*   **Operating System**: macOS 10.15+, Windows 10+, or Linux (Ubuntu 22.04+, Linux Mint 22+, Debian 12+)
 *   **Python**: 3.10 or higher
 *   **Antigravity**: Must be installed and run at least once
 
@@ -114,6 +114,35 @@ Build single-file `.exe` executable.
 *   **Contains**: `Antigravity Manager.exe`
 *   **Features**: No console window, single-file portable execution.
 
+### 🐧 Linux Build
+Build portable `.AppImage` for Linux distributions.
+
+```bash
+# 1. Grant execution permission
+chmod +x build_linux.sh
+
+# 2. Run build
+./build_linux.sh
+```
+*   **Output Path**: `./Antigravity-Manager-x86_64.AppImage`
+*   **Tested On**: Linux Mint 22.1, Ubuntu 22.04+, Debian 12+
+*   **Features**: Portable, no installation required, runs on most Linux distros
+*   **Dependencies**: Python 3.10+, wget (auto-installed if missing)
+
+**To run the AppImage:**
+```bash
+./Antigravity-Manager-x86_64.AppImage
+```
+
+**Optional: Install to system:**
+```bash
+# User installation
+mv Antigravity-Manager-x86_64.AppImage ~/.local/bin/
+
+# System-wide installation (requires sudo)
+sudo mv Antigravity-Manager-x86_64.AppImage /usr/local/bin/
+```
+
 ---
 
 ## 🧩 Technical Architecture
@@ -132,6 +161,7 @@ antigravity_manager/
 ├── main.py                 # CLI entry point
 ├── build_macos.sh          # macOS build script
 ├── build_windows.ps1       # Windows build script
+├── build_linux.sh          # Linux build script
 └── requirements.txt        # Python dependencies
 ```
 
