@@ -118,6 +118,8 @@ Build single-file `.exe` executable.
 Build portable `.AppImage` for Linux distributions.
 
 ```bash
+# 0
+python3 -m venv .venv
 # 1. Grant execution permission
 chmod +x build_linux.sh
 
